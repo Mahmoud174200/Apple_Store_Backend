@@ -12,3 +12,5 @@ router.route('/').get(getProducts).post(creatProduct)
 router.route('/:id').get(getProduct).put(updateProduct).delete(deleteProduct)
 
 module.exports =router
+
+//done

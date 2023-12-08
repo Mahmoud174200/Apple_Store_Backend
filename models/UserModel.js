@@ -13,12 +13,13 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 6  // Example: minimum password length
+    minlength: [6,"Too short password"]  ,
+    maxlength:[64,"Too long password"]
   },
   phone: {
     type: String,
     required: false
-    // Add any validation rules for phone numbers
+// Add any validation rules for phone numbers
   }
 });
 

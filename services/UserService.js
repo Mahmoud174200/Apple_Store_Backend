@@ -2,18 +2,18 @@ const UserModel = require('../models/UserModel');
 const asyncHandler =require('express-async-handler')
 const bcrypt = require('bcrypt');
 
-const users = [
-  {
-    id: 1,
-    email: 'user@example.com',
-    password: 'password123',
-  },
-  {
-    id: 2,
-    email: 'user2@example.com',
-    password: 'password456',
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     email: 'user@example.com',
+//     password: 'password123',
+//   },
+//   {
+//     id: 2,
+//     email: 'user2@example.com',
+//     password: 'password456',
+//   },
+// ];
 
 
 exports.getUsers = 
@@ -97,18 +97,31 @@ exports.updateUserPassword = asyncHandler(async (req, res) => {
 });
 
 
-
-exports.login= (req, res) => {
+exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  // التحقق من وجود المستخدم
-  const user = users.find(u => u.email === email && u.password === password);
+  try {
+    // Find the user by email in the MongoDB database
+    const user = await UserModel.findOne({ email });
 
-  if (user) {
-    // تسجيل الدخول ناجح
-    res.json({ success: true, message: 'Login successful' });
-  } else {
-    // فشل تسجيل الدخول
-    res.status(401).json({ success: false, message: 'Invalid email or password' });
- }
+    // If the user is not found
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+
+    // Compare the provided password with the hashed password in the database
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    // If the passwords match, login is successful
+    if (isPasswordValid) {
+      res.json({ success: true, message: 'Login successful' });
+    } else {
+      // Password is invalid
+      res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    // Handle database errors or other exceptions
+    console.error('Error during login:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 };

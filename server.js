@@ -7,6 +7,7 @@ dotenv.config({ path: 'config.env' });
 // Connect to the database
 const dbConnection = require('./config/database')
 const ProductsRoute = require('./routes/productRoute')
+const UserRoute = require('./routes/UserRoute');
 
 dbConnection()
 const app = express();
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV == 'development') {
 
 // mount routes
 app.use('/api/v1/products' , ProductsRoute)
+app.use('/api/v1/users',UserRoute);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

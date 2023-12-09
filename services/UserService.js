@@ -1,6 +1,8 @@
 const UserModel = require('../models/UserModel');
 const asyncHandler =require('express-async-handler')
 const bcrypt = require('bcrypt');
+const { createUserValidator, updateUserValidator } = require('../utils/validators/userValidator');
+
 
 // const users = [
 //   {
@@ -17,6 +19,7 @@ const bcrypt = require('bcrypt');
 
 
 exports.getUsers = 
+
    asyncHandler( async (req,res)=>{
     const page =req.query.page *1 || 1;
     const limit = req.query.limit *1 || 5;
@@ -37,7 +40,11 @@ exports.getUserById = asyncHandler(async (req, res) => {
 });
 
 
-exports.createUser = (req, res) => {
+exports.createUser = 
+createUserValidator,
+
+(req, res) => {
+  
   const { email, name, password, phone } = req.body;
 
   bcrypt.hash(password, 10, (hashErr, hashedPassword) => {
@@ -58,7 +65,9 @@ exports.createUser = (req, res) => {
      });
   });
 };
-exports.UpdateUser =asyncHandler(async (req,res)=>{
+exports.UpdateUser =
+updateUserValidator,
+asyncHandler(async (req,res)=>{
   const { id } = req.params;
   const { name } = req.body; 
 

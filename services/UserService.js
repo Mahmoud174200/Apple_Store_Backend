@@ -47,7 +47,7 @@ exports.createUser = (req, res) => {
 
     UserModel.create({ email, name, password: hashedPassword, phone })
       .then((user) => {
-        res.status(201).json({ data: user });
+        res.status(201).json({ success: true, message: 'Login successful', user: user });
       })
       .catch((err) => {
         if (err.code === 11000 && err.keyPattern && err.keyValue && err.keyValue.email) {
@@ -114,7 +114,7 @@ exports.login = async (req, res) => {
 
     // If the passwords match, login is successful
     if (isPasswordValid) {
-      res.json({ success: true, message: 'Login successful' });
+      res.json({ success: true, message: 'Login successful', user: user });
     } else {
       // Password is invalid
       res.status(401).json({ success: false, message: 'Invalid email or password' });

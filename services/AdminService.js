@@ -4,7 +4,7 @@ const { AdminModel } = require('../models/AdminModel');
 const createAdmin = async (req, res) => {
     try {
         const { username, password, email } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password with a salt factor of 10
         const admin = await AdminModel.create({ username, password: hashedPassword, email });
 
         res.status(200).json({ data: admin });
